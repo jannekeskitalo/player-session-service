@@ -1,0 +1,1 @@
+from amazoncorretto:8
