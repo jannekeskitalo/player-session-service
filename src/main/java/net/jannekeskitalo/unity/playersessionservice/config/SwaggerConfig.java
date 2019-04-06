@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice;
+package net.jannekeskitalo.unity.playersessionservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

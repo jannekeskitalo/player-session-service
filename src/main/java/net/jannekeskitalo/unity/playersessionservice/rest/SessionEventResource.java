@@ -39,7 +39,7 @@ public class SessionEventResource implements SessionEventResourceAPI {
 
 
         List<SessionEventResponse> response = new ArrayList<SessionEventResponse>();
-        IntStream.range(1, 10).forEach(event -> {
+        IntStream.range(1, hours).forEach(event -> {
                     response.add(SessionEventResponse.builder()
                             .event("start")
                             .country("FI")

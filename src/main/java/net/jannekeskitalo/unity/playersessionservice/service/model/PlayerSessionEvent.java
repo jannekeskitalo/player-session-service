@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.service.repository.model;
+package net.jannekeskitalo.unity.playersessionservice.service.model;
 
 import lombok.Data;
 import org.springframework.data.cassandra.core.cql.Ordering;
@@ -26,8 +26,6 @@ public class PlayerSessionEvent {
 
     @PrimaryKeyColumn(name = "bucket", ordinal = 2, type = PrimaryKeyType.PARTITIONED)
     private int bucketId;
-
-
 
     @Column("ts")
     private LocalDateTime ts;
