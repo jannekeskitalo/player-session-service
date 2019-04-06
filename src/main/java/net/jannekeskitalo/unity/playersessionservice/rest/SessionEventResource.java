@@ -9,11 +9,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @RestController
@@ -33,17 +35,20 @@ public class SessionEventResource implements SessionEventResourceAPI {
                     required = true)
                     int hours)
     {
-        log.debug("Get list of entities");
+        log.info("Get list of entities");
 
-        SessionEventResponse sessionEventResponse = SessionEventResponse.builder()
-                .event("start")
-                .country("FI")
-                .playerId(UUID.randomUUID())
-                .sessionId(UUID.randomUUID())
-                .ts(LocalDateTime.now())
-                .build();
 
-        List<SessionEventResponse> response = Collections.singletonList(sessionEventResponse);
+        List<SessionEventResponse> response = new ArrayList<SessionEventResponse>();
+        IntStream.range(1, 10).forEach(event -> {
+                    response.add(SessionEventResponse.builder()
+                            .event("start")
+                            .country("FI")
+                            .playerId(UUID.randomUUID())
+                            .sessionId(UUID.randomUUID())
+                            .ts(LocalDateTime.now())
+                            .build());
+                });
+
         if (response.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -57,16 +62,17 @@ public class SessionEventResource implements SessionEventResourceAPI {
             @ApiParam(name = "request",
                     value = "Create event request<br>Refer to model for detailed documentation",
                     required = true)
-                    CreateSessionEventRequest createSessionEventRequest) {
+                    CreateSessionEventRequest request) {
 
         SessionEventResponse sessionEventResponse = SessionEventResponse.builder()
-                .event("start")
-                .country("FI")
-                .playerId(UUID.randomUUID())
-                .sessionId(UUID.randomUUID())
-                .ts(LocalDateTime.now())
+                .event(request.getEvent())
+                .country(request.getCountry())
+                .playerId(request.getPlayerId())
+                .sessionId(request.getSessionId())
+                .ts(request.getTs())
                 .build();
 
+        log.info("Created event {}", sessionEventResponse);
         return ResponseEntity.ok(sessionEventResponse);
     }
 }

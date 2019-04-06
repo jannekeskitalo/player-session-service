@@ -1,5 +1,6 @@
 package net.jannekeskitalo.unity.playersessionservice.api;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 import java.sql.Timestamp;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -36,7 +37,7 @@ public class CreateSessionEventRequest {
 
     @ApiModelProperty(value = "Timestamp of the event", required = true, example = "")
     @NotNull
-    Timestamp ts;
+    LocalDateTime ts;
 
     @Tolerate
     public CreateSessionEventRequest() {
