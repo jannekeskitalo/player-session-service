@@ -101,7 +101,7 @@ public class SessionEventController implements SessionEventResourceAPI {
 
         Instant finish = Instant.now();
         long timeElapsed = Duration.between(start, finish).toMillis();
-        log.info("Elapsed time: {}", timeElapsed);
+        log.info("Elapsed time: {}, time per event: {}", timeElapsed, timeElapsed / count);
 
         return ResponseEntity.ok(sessionEventResponse);
     }
