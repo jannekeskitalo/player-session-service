@@ -1,5 +1,6 @@
 package net.jannekeskitalo.unity.playersessionservice.service.model;
 
+import lombok.Data;
 import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyClass;
@@ -8,8 +9,9 @@ import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
 import java.io.Serializable;
 import java.util.UUID;
 
+@Data
 @PrimaryKeyClass
-public class SessionEventKey implements Serializable {
+public class SessionStartedKey implements Serializable {
 
     @PrimaryKeyColumn(name = "country_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private int countryId;

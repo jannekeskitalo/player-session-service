@@ -15,6 +15,6 @@ public interface SessionEventResourceAPI {
     );
 
     @RequestMapping(method = RequestMethod.POST, path = "")
-    ResponseEntity<SessionEventResponse> createSessionEvent(@Valid @RequestBody CreateSessionEventRequest createSessionEventRequest);
+    ResponseEntity<SessionEventResponse> createSessionEvent(@RequestParam(value = "count", defaultValue = "1") int count, @Valid @RequestBody NewSessionEventRequest newSessionEventRequest);
 }
 

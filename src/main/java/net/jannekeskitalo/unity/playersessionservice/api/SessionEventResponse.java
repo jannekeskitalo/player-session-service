@@ -34,7 +34,7 @@ public class SessionEventResponse {
     @NotNull
     UUID sessionId;
 
-    @ApiModelProperty(value = "Timestamp of the event", required = true, example = "")
+    @ApiModelProperty(value = "Timestamp of the event", required = true, example = "2019-04-07T11:56:53.147")
     @NotNull
     LocalDateTime ts;
 

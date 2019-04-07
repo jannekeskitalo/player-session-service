@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateSessionEventRequest {
+public class NewSessionEventRequest {
     @ApiModelProperty(value = "Event type", required = true, example = "start")
     @NotNull
     String event;
@@ -35,12 +35,12 @@ public class CreateSessionEventRequest {
     @NotNull
     UUID sessionId;
 
-    @ApiModelProperty(value = "Timestamp of the event", required = true, example = "")
+    @ApiModelProperty(value = "Timestamp of the event", required = true, example = "2019-04-07T11:56:53.147")
     @NotNull
     LocalDateTime ts;
 
     @Tolerate
-    public CreateSessionEventRequest() {
+    public NewSessionEventRequest() {
     }
 }
 

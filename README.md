@@ -19,6 +19,15 @@ The design starts from the API requirements which are the following:
 2) Get session starts for the last X (X is defined by the user) hours for each country
 3) Get last 20 complete sessions for a given player
 
+## Assumptions
+
+As the assignment doesn't give details of the access load patterns, following is assumed:
+
+* Total event write throughput ~5M/min -> +80k/s
+* Distributed to ~200 countries with very high skew
+* Big reads of session starts are infrequent and batch oriented
+* Reads of last completed sessions per player are more frequent, but still significantly less than writes
+
 ### Events
 
 ```
@@ -43,13 +52,9 @@ Example "end" -event
 Example data,
 https://cdn.unityads.unity3d.com/assignments/assignment_data.jsonl.bz2
 
-
 ## Database model
 
-Tables and partition strategy. Without knowing the exact details of the load, following is assumed as basis for the design:
-
-* Total event throughput ~5M/min -> +80k/s
-* Distributed to ~200 countries with very high skew
+Tables and partition strategy. Without knowing the exact details of the load, the design is based on the aforementioned assumptions.
 
 ### Tables
 
@@ -59,12 +64,13 @@ To combine the events into one complete session, a lookup by session_id is neede
 
 ```sql
 // A session lookup table
-CREATE TABLE session_complete (
+CREATE TABLE session_info (
   session_id UUID
 , player_id UUID
 , start_ts timestamp
 , end_ts timestamp
-  PRIMARY KEY (session_id)
+, country text
+, PRIMARY KEY (session_id)
 );
 
 // Last started sessions by country
@@ -78,7 +84,7 @@ CREATE TABLE session_started (
   PRIMARY KEY ((country, hour, bucket), start_ts)
 ) WITH CLUSTERING ORDER BY (start_ts DESC)
   AND COMPACTION = {'class': 'TimeWindowCompactionStrategy', 
-                       'compaction_window_unit': 'DAYS', 
+                       'compaction_window_unit': 'HOURS', 
                        'compaction_window_size': 1};
 
 // Last complete sessions by player
@@ -108,11 +114,11 @@ A third column _"bucket"_ is added to the partition key. Bucket identifier is de
 
     player_id>>64 % BUCKETING_FACTOR
     
-Bucketing factor is adjusted dynamically in certain bounds. A metric is maintained of the current event throughput and simple algorithm adjust the factor as needed. Also an endpoint is added to the API to allow manual adjustment.
+Bucketing factor is adjusted dynamically in certain bounds. A metric is maintained of the current event throughput and simple algorithm adjusts the factor as needed. Also an endpoint is added to the API to allow manual adjustment.
 
-As the bucket distributes the load more evenly, it also makes querying the data a bit more complicated. For example fetching data for the last hour requires visiting all the buckets and the service needs to know which buckets exists. This could be done by defining the set of possible buckets as finite range from 1 to 1000 for example and querying all of them always, or maintaining a separate table for bucket metadata.
+As the bucket distributes the load more evenly, it also makes querying the data a bit more complicated. For example fetching data for the last hour requires visiting all the buckets and the service needs to know which buckets exist. This could be done by defining the set of possible buckets as finite range from 1 to 1000 and querying all of them always, or maintaining a separate table for bucket metadata.
 
-_At peak load a 25% share of the total events (US) would result to partition row count of 75k when using a bucketing factor of 1000 which falls inside the recommended limits._
+_At peak load a 25% share of the total events (US) would result to partition row count of 75k when using a bucketing factor of 1000. This falls inside the recommended limits._
 
 ## Production deployment considerations
 
@@ -122,6 +128,15 @@ Deployment of the service and the underlying infrastructure should be automated 
 
 ## Alternative architectures
 
-Alternative implementation of this service could be done using serverless functions and API gateway. Cassandra could be replaced with a managed db service that features similar scaling properties, most notably DynamoDB or Bigtable. One could also apply the CQRS pattern and put a performant message bus like Kafka behind the rest api and use Kafka Streams or Spark Streaming to build materialized views of the event data into multiple data stores that cater for different access patterns. Domain specific realtime dashboards wold query data from Cassandra while more complex analytical use cases would be a better fit for Bigquery, Snowflake or similar distributed column stores.
+Alternative implementation of this service could be done using serverless functions and API gateway. Cassandra could be replaced with a managed db service that features similar scaling properties, most notably DynamoDB or Bigtable. One could also apply the CQRS pattern and put a performant message bus like Kafka behind the rest api and use Kafka Streams or Spark Streaming to build materialized views of the event data into multiple data stores that cater for different access patterns. Domain specific realtime dashboards would query data from Cassandra while more complex analytical use cases would be a better fit for Bigquery, Snowflake or similar distributed column stores.
 
+## Appendix
+
+```sql
+CREATE KEYSPACE player_session
+  WITH REPLICATION = { 
+   'class' : 'SimpleStrategy', 
+   'replication_factor' : 1 
+  };
+```
 
