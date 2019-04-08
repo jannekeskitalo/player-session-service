@@ -1,8 +1,7 @@
-package net.jannekeskitalo.unity.playersessionservice.service.repository;
+package net.jannekeskitalo.unity.playersessionservice.ingest;
 
 import lombok.extern.slf4j.Slf4j;
-import net.jannekeskitalo.unity.playersessionservice.api.NewSessionEventRequest;
-import net.jannekeskitalo.unity.playersessionservice.service.model.SessionInfo;
+import net.jannekeskitalo.unity.playersessionservice.domain.SessionInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.CassandraTemplate;
 import org.springframework.stereotype.Repository;

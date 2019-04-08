@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.api;
+package net.jannekeskitalo.unity.playersessionservice.domain;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SessionEventResponse {
+public class IngestEvent {
     @ApiModelProperty(value = "Event type", required = true, example = "start")
     @NotNull
     String event;
@@ -39,7 +39,6 @@ public class SessionEventResponse {
     LocalDateTime ts;
 
     @Tolerate
-    public SessionEventResponse() {
+    public IngestEvent() {
     }
 }
-

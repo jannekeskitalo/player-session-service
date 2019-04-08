@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.service.model;
+package net.jannekeskitalo.unity.playersessionservice.domain;
 
 import lombok.Builder;
 import lombok.Data;

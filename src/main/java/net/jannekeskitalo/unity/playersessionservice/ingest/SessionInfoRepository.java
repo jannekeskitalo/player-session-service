@@ -1,12 +1,9 @@
-package net.jannekeskitalo.unity.playersessionservice.service.repository;
+package net.jannekeskitalo.unity.playersessionservice.ingest;
 
-import net.jannekeskitalo.unity.playersessionservice.service.model.SessionInfo;
+import net.jannekeskitalo.unity.playersessionservice.domain.SessionInfo;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 
-import javax.swing.text.html.Option;
-import javax.websocket.Session;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
