@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  application:
+    depends_on:
+      - cassandra
+    image: player-session-service
+    ports:
+      - "8080:8080"
+    links:
+      - cassandra
+    networks:
+      - test
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+  cassandra:
+    image: 'cassandra'
+    ports:
+      - '7000:7000'
+      - '9042:9042'
+    networks:
+      - test
+
+networks:
+  test:
+    driver: "bridge"

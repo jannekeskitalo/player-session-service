@@ -1,0 +1,74 @@
+{
+  "event_batch": [
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ea",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437eb",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ec",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ee",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ef",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ba",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437bb",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437bc",
+      "ts": "2019-04-07T11:56:53.147"
+    },
+    {
+      "country": "FI",
+      "event": "start",
+      "player_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437ed",
+      "session_id": "2d4073e4-6ceb-4d0a-9d40-be301b9437bd",
+      "ts": "2019-04-07T11:56:53.147"
+    }
+  ]
+}

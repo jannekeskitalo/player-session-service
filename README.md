@@ -90,15 +90,15 @@ CREATE TABLE session_started (
 // Last complete sessions by player
 CREATE MATERIALIZED VIEW complete_session_by_player as
   SELECT
-  player_id UUID
-  country text
-, hour timestamp 
-, bucket int
-, completed_ts timestamp
-, session_id UUID
-  FROM session
-  PRIMARY KEY ((country, hour, bucket), completed_ts)
-) WITH CLUSTERING ORDER BY (completed_ts DESC);
+    player_id
+  , session_id
+  , start_ts
+  , end_ts
+  , country
+  FROM session_info
+  WHERE end_ts is not null
+  PRIMARY KEY ((player_id), completed_ts, session_id)
+  WITH CLUSTERING ORDER BY (completed_ts DESC);
 
 ```
 

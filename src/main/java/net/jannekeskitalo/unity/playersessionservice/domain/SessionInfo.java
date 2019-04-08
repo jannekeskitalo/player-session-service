@@ -20,11 +20,11 @@ public class SessionInfo {
     @Column("player_id")
     private UUID playerId;
 
-    @Column("started_ts")
-    private LocalDateTime startedTs;
+    @Column("start_ts")
+    private LocalDateTime startTs;
 
-    @Column("ended_ts")
-    private LocalDateTime endedTs;
+    @Column("end_ts")
+    private LocalDateTime endTs;
 
     @Column("country")
     private String country;

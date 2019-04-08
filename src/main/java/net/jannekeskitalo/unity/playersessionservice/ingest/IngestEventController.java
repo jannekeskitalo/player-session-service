@@ -37,7 +37,7 @@ public class IngestEventController implements IngestEventAPI {
         long finish = System.nanoTime();
         long timeElapsed = finish - start;
 
-        log.info("Elapsed micros: {}, micros per event: {}", timeElapsed / 1000, timeElapsed / count / 1000);
+        log.info("Elapsed micros: {}, micros per event: {}", timeElapsed / 1000, timeElapsed / request.getEventBatch().size() / 1000);
 
         return ResponseEntity.ok(IngestEventResponse.builder().ingestedEventCount(request.getEventBatch().size()).ts(LocalDateTime.now()).build());
     }

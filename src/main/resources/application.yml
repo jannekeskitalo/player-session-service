@@ -1,11 +1,21 @@
 spring:
   profiles:
-    active: dev
+    active: local
+
+---
+spring:
+  profiles: local
   data:
     cassandra:
       keyspace-name: player_session
       schema-action: recreate
+      contact-points: localhost
 
-logging:
-  level:
-    com.datastax.driver: ERROR
+---
+spring:
+  profiles: docker
+  data:
+    cassandra:
+      keyspace-name: player_session
+      schema-action: recreate
+      contact-points: cassandra
