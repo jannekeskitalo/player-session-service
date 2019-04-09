@@ -1,7 +1,7 @@
 package net.jannekeskitalo.unity.playersessionservice.ingest;
 
 import lombok.extern.slf4j.Slf4j;
-import net.jannekeskitalo.unity.playersessionservice.domain.SessionInfo;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.AsyncCassandraTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,7 +20,7 @@ public class SessionInfoRepositoryCustom {
         this.asyncCassandraTemplate = asyncCassandraTemplate;
     }
 
-    public List<CompletableFuture<SessionInfo>> saveBatch(Iterable<SessionInfo> sessionInfos) {
+    public List<CompletableFuture<SessionInfo>> saveBatchAsync(Iterable<SessionInfo> sessionInfos) {
         List<CompletableFuture<SessionInfo>> futures = new ArrayList<>();
         for (SessionInfo record: sessionInfos) {
             futures.add(asyncCassandraTemplate.insert(record).completable());

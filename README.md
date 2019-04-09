@@ -11,7 +11,7 @@ A service that stores events to Cassandra and allows querying them.
 * API for fetching last 20 complete sessions for a given player
 * Data older than 1 year should be discarded
 
-## API first approach
+## API first -approach
 
 The design starts from the API requirements which are the following:
 

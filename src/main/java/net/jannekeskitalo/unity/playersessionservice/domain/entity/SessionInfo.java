@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.domain;
+package net.jannekeskitalo.unity.playersessionservice.domain.entity;
 
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +25,12 @@ public class SessionInfo {
 
     @Column("end_ts")
     private LocalDateTime endTs;
+
+    @Column("start_hour")
+    private LocalDateTime startHourTs;
+
+    @Column("end_hour")
+    private LocalDateTime endHourTs;
 
     @Column("country")
     private String country;

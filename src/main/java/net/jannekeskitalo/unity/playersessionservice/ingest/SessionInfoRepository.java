@@ -1,6 +1,6 @@
 package net.jannekeskitalo.unity.playersessionservice.ingest;
 
-import net.jannekeskitalo.unity.playersessionservice.domain.SessionInfo;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionInfo;
 import org.springframework.data.cassandra.repository.CassandraRepository;
 import org.springframework.stereotype.Repository;
 

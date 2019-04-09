@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.domain;
+package net.jannekeskitalo.unity.playersessionservice.domain.entity;
 
 import lombok.Data;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;

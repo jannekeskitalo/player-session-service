@@ -1,9 +1,7 @@
-package net.jannekeskitalo.unity.playersessionservice.domain;
+package net.jannekeskitalo.unity.playersessionservice.domain.api;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
-import java.sql.Timestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -12,6 +10,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
+import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEvent;
+
 import javax.validation.constraints.NotNull;
 
 @Data

@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.domain;
+package net.jannekeskitalo.unity.playersessionservice.domain.api;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -17,28 +17,17 @@ import javax.validation.constraints.NotNull;
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class IngestEvent {
-    @ApiModelProperty(value = "Event type", required = true, example = "start")
+public class IngestEventResponse {
+    @ApiModelProperty(value = "Event type", required = true, example = "10")
     @NotNull
-    String event;
-
-    @ApiModelProperty(value = "Country code", required = true, example = "FI")
-    @NotNull
-    String country;
-
-    @ApiModelProperty(value = "Player ID", required = true, example = "2d4073e4-6ceb-4d0a-9d40-be301b9437ed")
-    @NotNull
-    UUID playerId;
-
-    @ApiModelProperty(value = "Session ID", required = true, example = "2d4073e4-6ceb-4d0a-9d40-be301b9437ed")
-    @NotNull
-    UUID sessionId;
+    int ingestedEventCount;
 
     @ApiModelProperty(value = "Timestamp of the event", required = true, example = "2019-04-07T11:56:53.147")
     @NotNull
     LocalDateTime ts;
 
     @Tolerate
-    public IngestEvent() {
+    public IngestEventResponse() {
     }
 }
+

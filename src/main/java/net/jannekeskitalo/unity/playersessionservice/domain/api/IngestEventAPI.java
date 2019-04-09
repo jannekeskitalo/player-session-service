@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.domain;
+package net.jannekeskitalo.unity.playersessionservice.domain.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +9,10 @@ public interface IngestEventAPI {
 
     @RequestMapping(method = RequestMethod.POST, path = "")
     ResponseEntity<IngestEventResponse> handleEventBatch(
-            @RequestParam(value = "count", defaultValue = "1") int count,
             @Valid @RequestBody IngestEventRequest ingestEventRequest);
+
+    @RequestMapping(method = RequestMethod.GET, path = "/test")
+    ResponseEntity test(@RequestParam(value = "requestBatchSize", defaultValue = "10") int requestBatchSize,
+                        @RequestParam(value = "asyncEnabled", defaultValue = "false") boolean asyncEnabled);
 }
 

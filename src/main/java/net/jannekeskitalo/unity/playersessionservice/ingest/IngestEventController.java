@@ -2,10 +2,10 @@ package net.jannekeskitalo.unity.playersessionservice.ingest;
 
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import net.jannekeskitalo.unity.playersessionservice.domain.IngestEvent;
-import net.jannekeskitalo.unity.playersessionservice.domain.IngestEventRequest;
-import net.jannekeskitalo.unity.playersessionservice.domain.IngestEventAPI;
-import net.jannekeskitalo.unity.playersessionservice.domain.IngestEventResponse;
+import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventRequest;
+import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventAPI;
+import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventResponse;
+import net.jannekeskitalo.unity.playersessionservice.util.TestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 public class IngestEventController implements IngestEventAPI {
 
     private final IngestService ingestService;
+    private final TestHelper testHelper = new TestHelper();
 
     public IngestEventController(@Autowired IngestService ingestService) {
         this.ingestService = ingestService;
@@ -27,12 +28,11 @@ public class IngestEventController implements IngestEventAPI {
 
     @RequestMapping(method = RequestMethod.POST, path = "")
     public ResponseEntity<IngestEventResponse> handleEventBatch(
-            @RequestParam(value = "count", defaultValue = "1") int count,
             @Valid @RequestBody IngestEventRequest request) {
 
         long start = System.nanoTime();
 
-        ingestService.handleEventBatch(request);
+        ingestService.handleEventBatchSync(request);
 
         long finish = System.nanoTime();
         long timeElapsed = finish - start;
@@ -41,4 +41,20 @@ public class IngestEventController implements IngestEventAPI {
 
         return ResponseEntity.ok(IngestEventResponse.builder().ingestedEventCount(request.getEventBatch().size()).ts(LocalDateTime.now()).build());
     }
+
+    @RequestMapping(method = RequestMethod.GET, path = "/test")
+    public ResponseEntity test(@RequestParam(value = "requestBatchSize", defaultValue = "10") int requestBatchSize,
+                               @RequestParam(value = "asyncEnabled", defaultValue = "false") boolean asyncEnabled) {
+
+        IngestEventRequest ingestEventRequest = TestHelper.createIngestEventRequestOfSize(requestBatchSize);
+        testHelper.startTimer();
+        if (asyncEnabled) {
+            ingestService.handleEventBatchAsync(ingestEventRequest);
+        } else {
+            ingestService.handleEventBatchSync(ingestEventRequest);
+        }
+        log.info("Elapsed per event: {}", testHelper.stopTimer() / ingestEventRequest.getEventBatch().size() / 1000000);
+        return ResponseEntity.accepted().build();
+    }
+
 }
