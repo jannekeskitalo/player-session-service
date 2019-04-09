@@ -76,7 +76,7 @@ CREATE TABLE session_info (
 );
 
 // Last started sessions by country
-CREATE TABLE session_started (
+CREATE TABLE session_started_by_country (
   country text
 , hour timestamp
 , bucket int
@@ -90,7 +90,7 @@ CREATE TABLE session_started (
                        'compaction_window_size': 1};
                        
 // Last started sessions by country as MV
-CREATE MATERIALIZED VIEW complete_session_by_player as
+CREATE MATERIALIZED VIEW player_session as
   SELECT
     country
   , start_hour
@@ -103,7 +103,7 @@ CREATE MATERIALIZED VIEW complete_session_by_player as
   WITH CLUSTERING ORDER BY (start_ts DESC);
 
 // Last complete sessions by player
-CREATE MATERIALIZED VIEW complete_session_by_player as
+CREATE MATERIALIZED VIEW session_by_player as
   SELECT
     player_id
   , session_id
@@ -144,6 +144,13 @@ Deployment of the service and the underlying infrastructure should be automated 
 ## Alternative architectures
 
 Alternative implementation of this service could be done using serverless functions and API gateway. Cassandra could be replaced with a managed db service that features similar scaling properties, most notably DynamoDB or Bigtable. One could also apply the CQRS pattern and put a performant message bus like Kafka behind the rest api and use Kafka Streams or Spark Streaming to build materialized views of the event data into multiple data stores that cater for different access patterns. Domain specific realtime dashboards would query data from Cassandra while more complex analytical use cases would be a better fit for Bigquery, Snowflake or similar distributed column stores.
+
+## Things to do
+
+* Exception handling and response codes
+* Performance testing with proper Cassandra cluster
+* Timestamp handling with full event precision
+* Timestamp timezone?
 
 ## Appendix
 

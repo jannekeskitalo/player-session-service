@@ -1,7 +1,9 @@
 package net.jannekeskitalo.unity.playersessionservice.ingestion;
 
 import lombok.extern.slf4j.Slf4j;
-import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionInfo;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionCompleteByPlayer;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionById;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionStartedByCountry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.AsyncCassandraTemplate;
 import org.springframework.stereotype.Repository;
@@ -20,11 +22,15 @@ public class IngestRepository {
         this.asyncCassandraTemplate = asyncCassandraTemplate;
     }
 
-    public List<CompletableFuture<SessionInfo>> saveBatchAsync(Iterable<SessionInfo> sessionInfos) {
-        List<CompletableFuture<SessionInfo>> futures = new ArrayList<>();
-        for (SessionInfo record: sessionInfos) {
-            futures.add(asyncCassandraTemplate.insert(record).completable());
-        }
-        return futures;
+    public CompletableFuture<SessionById> insertSessionById(SessionById record) {
+        return asyncCassandraTemplate.insert(record).completable();
+    }
+
+    public CompletableFuture<SessionStartedByCountry> insertSessionStartedByCountry(SessionStartedByCountry record) {
+        return asyncCassandraTemplate.insert(record).completable();
+    }
+
+    public CompletableFuture<SessionCompleteByPlayer> insertSessionCompleteByPlayer(SessionCompleteByPlayer record) {
+        return asyncCassandraTemplate.insert(record).completable();
     }
 }

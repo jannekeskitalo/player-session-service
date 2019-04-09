@@ -8,8 +8,7 @@ import javax.validation.Valid;
 public interface IngestEventAPI {
 
     @RequestMapping(method = RequestMethod.POST, path = "")
-    ResponseEntity<IngestEventResponse> handleEventBatch(
-            @Valid @RequestBody IngestEventRequest ingestEventRequest);
+    ResponseEntity<IngestEventResponse> handleEventBatch(@Valid @RequestBody IngestEventRequest ingestEventRequest);
 
     @RequestMapping(method = RequestMethod.GET, path = "/test")
     ResponseEntity test(@RequestParam(value = "requestBatchSize", defaultValue = "10") int requestBatchSize,
