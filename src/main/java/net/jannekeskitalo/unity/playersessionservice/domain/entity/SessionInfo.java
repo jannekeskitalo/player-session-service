@@ -2,6 +2,7 @@ package net.jannekeskitalo.unity.playersessionservice.domain.entity;
 
 import lombok.Builder;
 import lombok.Data;
+import org.springframework.data.cassandra.core.cql.Ordering;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
 import org.springframework.data.cassandra.core.mapping.Column;
 import org.springframework.data.cassandra.core.mapping.PrimaryKeyColumn;
@@ -26,7 +27,7 @@ public class SessionInfo {
     @Column("end_ts")
     private LocalDateTime endTs;
 
-    @Column("start_hour")
+    @PrimaryKeyColumn(name = "start_hour", ordinal = 1, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private LocalDateTime startHourTs;
 
     @Column("end_hour")

@@ -1,10 +1,10 @@
-package net.jannekeskitalo.unity.playersessionservice.ingest;
+package net.jannekeskitalo.unity.playersessionservice.ingestion;
 
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventRequest;
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventAPI;
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventResponse;
+import net.jannekeskitalo.unity.playersessionservice.api.IngestEventRequest;
+import net.jannekeskitalo.unity.playersessionservice.api.IngestEventAPI;
+import net.jannekeskitalo.unity.playersessionservice.api.IngestEventResponse;
 import net.jannekeskitalo.unity.playersessionservice.util.TestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

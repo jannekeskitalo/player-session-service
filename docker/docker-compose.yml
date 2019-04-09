@@ -1,10 +1,13 @@
 version: "3"
 
 services:
-  application:
-    depends_on:
-      - cassandra
+  app:
     image: player-session-service
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    depends_on:
+    - cassandra
     ports:
       - "8080:8080"
     links:
@@ -14,7 +17,10 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=docker
   cassandra:
-    image: 'cassandra'
+    image: cassandra
+    volumes:
+    - "./cassandra-init.sh:/cassandra-init.sh"
+    command: "sh /cassandra-init.sh"
     ports:
       - '7000:7000'
       - '9042:9042'

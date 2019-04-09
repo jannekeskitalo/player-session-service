@@ -1,7 +1,7 @@
-package net.jannekeskitalo.unity.playersessionservice.domain.api;
+package net.jannekeskitalo.unity.playersessionservice.api;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

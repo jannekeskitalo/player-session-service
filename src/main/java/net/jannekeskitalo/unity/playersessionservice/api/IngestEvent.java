@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.domain.api;
+package net.jannekeskitalo.unity.playersessionservice.api;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

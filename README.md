@@ -69,8 +69,10 @@ CREATE TABLE session_info (
 , player_id UUID
 , start_ts timestamp
 , end_ts timestamp
+, start_hour timestamp
+, end_hour timestamp
 , country text
-, PRIMARY KEY (session_id)
+, PRIMARY KEY (session_id, start_hour)
 );
 
 // Last started sessions by country
@@ -86,6 +88,19 @@ CREATE TABLE session_started (
   AND COMPACTION = {'class': 'TimeWindowCompactionStrategy', 
                        'compaction_window_unit': 'HOURS', 
                        'compaction_window_size': 1};
+                       
+// Last started sessions by country as MV
+CREATE MATERIALIZED VIEW complete_session_by_player as
+  SELECT
+    country
+  , start_hour
+  , start_ts
+  , player_id
+  , session_id
+  FROM session_info
+  WHERE country is not null and start_hour is not null and start_ts is not null and session_id is not null
+  PRIMARY KEY ((country, start_hour), start_ts)
+  WITH CLUSTERING ORDER BY (start_ts DESC);
 
 // Last complete sessions by player
 CREATE MATERIALIZED VIEW complete_session_by_player as

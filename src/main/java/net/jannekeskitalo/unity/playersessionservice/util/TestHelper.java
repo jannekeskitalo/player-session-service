@@ -1,7 +1,7 @@
 package net.jannekeskitalo.unity.playersessionservice.util;
 
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEvent;
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventRequest;
+import net.jannekeskitalo.unity.playersessionservice.api.IngestEvent;
+import net.jannekeskitalo.unity.playersessionservice.api.IngestEventRequest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

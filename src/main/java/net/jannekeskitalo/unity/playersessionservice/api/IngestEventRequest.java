@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.domain.api;
+package net.jannekeskitalo.unity.playersessionservice.api;
 
 import java.util.List;
 
@@ -10,7 +10,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEvent;
 
 import javax.validation.constraints.NotNull;
 

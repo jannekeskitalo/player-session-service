@@ -7,7 +7,7 @@ spring:
   profiles: local
   data:
     cassandra:
-      keyspace-name: player_session
+      keyspace-name: test
       schema-action: recreate
       contact-points: localhost
 
@@ -16,6 +16,10 @@ spring:
   profiles: docker
   data:
     cassandra:
-      keyspace-name: player_session
+      keyspace-name: test
       schema-action: recreate
       contact-points: cassandra
+logging:
+  level:
+    com.datastax.driver: DEBUG
+

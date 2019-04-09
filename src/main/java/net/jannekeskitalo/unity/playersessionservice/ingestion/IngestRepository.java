@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.ingest;
+package net.jannekeskitalo.unity.playersessionservice.ingestion;
 
 import lombok.extern.slf4j.Slf4j;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionInfo;
@@ -12,11 +12,11 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 @Repository
-public class SessionInfoRepositoryCustom {
+public class IngestRepository {
 
     private final AsyncCassandraTemplate asyncCassandraTemplate;
 
-    public SessionInfoRepositoryCustom(@Autowired AsyncCassandraTemplate asyncCassandraTemplate) {
+    public IngestRepository(@Autowired AsyncCassandraTemplate asyncCassandraTemplate) {
         this.asyncCassandraTemplate = asyncCassandraTemplate;
     }
 

@@ -1,26 +1,24 @@
-package net.jannekeskitalo.unity.playersessionservice.ingest;
+package net.jannekeskitalo.unity.playersessionservice.ingestion;
 
 import lombok.extern.slf4j.Slf4j;
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEvent;
-import net.jannekeskitalo.unity.playersessionservice.domain.api.IngestEventRequest;
+import net.jannekeskitalo.unity.playersessionservice.api.IngestEvent;
+import net.jannekeskitalo.unity.playersessionservice.api.IngestEventRequest;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
 public class IngestService {
 
-    private final SessionInfoRepositoryCustom sessionInfoRepository;
+    private final IngestRepository sessionInfoRepository;
 
-    public IngestService(@Autowired SessionInfoRepositoryCustom sessionInfoRepository) {
+    public IngestService(@Autowired IngestRepository sessionInfoRepository) {
         this.sessionInfoRepository = sessionInfoRepository;
     }
 

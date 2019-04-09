@@ -1,4 +1,4 @@
-package net.jannekeskitalo.unity.playersessionservice.domain.api;
+package net.jannekeskitalo.unity.playersessionservice.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
