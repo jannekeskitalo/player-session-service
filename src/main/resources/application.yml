@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: local
+  servlet:
+    multipart:
+      max-file-size: 200000000
+      max-request-size: 200000000
 
 ---
 spring:

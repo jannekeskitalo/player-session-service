@@ -1,7 +1,5 @@
 package net.jannekeskitalo.unity.playersessionservice.api;
 
-import java.time.LocalDateTime;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
@@ -9,25 +7,18 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
-import lombok.experimental.Tolerate;
+
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @ApiModel
 @Builder
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class IngestEventResponse {
-    @ApiModelProperty(value = "Event count", required = true, example = "10")
-    @NotNull
-    int ingestedEventCount;
+public class QueryResponse {
 
-    @ApiModelProperty(value = "Timestamp of the ingestion", required = true, example = "2019-04-07T11:56:53.147")
+    @ApiModelProperty(value = "Session item list", required = true)
     @NotNull
-    LocalDateTime ts;
-
-    @Tolerate
-    public IngestEventResponse() {
-    }
+    List<QueryItem> queryItems;
 }
-

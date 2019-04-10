@@ -8,12 +8,17 @@ import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionComple
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionStartedByCountry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
+/**
+ * Transforms ingested events and inserts/updates into corresponding Cassandra tables.
+ * Uses asynchronous sending internally, but still offers synchronous semantics for API client.
+ * Design assumes the client will resend the event batch if there are errors in cassandra. Atomic
+ * batch operation is not used, because it's slow when touching multiple partitions. The chosen
+ * approach is eventually consistent IF the client does retries as expected.
+ */
 @Slf4j
 @Service
 public class IngestService {
@@ -51,7 +56,7 @@ public class IngestService {
     private List<CompletableFuture<SessionById>> handleSessionById(List<IngestEvent> ingestEventList) {
         List<CompletableFuture<SessionById>> futures = new ArrayList<>();
         for (IngestEvent event : ingestEventList) {
-            futures.add(ingestRepository.insertSessionById(entityConverter.toSessionById(event)));
+            entityConverter.toSessionById(event).ifPresent(e -> futures.add(ingestRepository.insertSessionById(e)));
         }
         return futures;
     }
@@ -59,7 +64,7 @@ public class IngestService {
     private List<CompletableFuture<SessionStartedByCountry>> handleSessionStartedByCountry(List<IngestEvent> ingestEventList) {
         List<CompletableFuture<SessionStartedByCountry>> futures = new ArrayList<>();
         for (IngestEvent event : ingestEventList) {
-            futures.add(ingestRepository.insertSessionStartedByCountry(entityConverter.toSessionStartedByCountry(event)));
+            entityConverter.toSessionStartedByCountry(event).ifPresent(e -> futures.add(ingestRepository.insertSessionStartedByCountry(e)));
         }
         return futures;
     }
@@ -67,7 +72,7 @@ public class IngestService {
     private List<CompletableFuture<SessionCompleteByPlayer>> handleSessionCompleteByPlayer(List<IngestEvent> ingestEventList) {
         List<CompletableFuture<SessionCompleteByPlayer>> futures = new ArrayList<>();
         for (IngestEvent event : ingestEventList) {
-            futures.add(ingestRepository.insertSessionCompleteByPlayer(entityConverter.toSessionCompleteByPlayer(event)));
+            entityConverter.toSessionCompleteByPlayer(event).ifPresent(e -> futures.add(ingestRepository.insertSessionCompleteByPlayer(e)));
         }
         return futures;
     }

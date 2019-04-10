@@ -22,8 +22,9 @@ import java.util.Optional;
 @Validated
 public class EntityConverter {
 
-    public SessionById toSessionById(IngestEvent event) {
-        return SessionById.builder()
+    public Optional<SessionById> toSessionById(IngestEvent event) {
+
+        return Optional.of(SessionById.builder()
             .sessionId(event.getSessionId())
             .playerId(event.getPlayerId())
             .startTs(getPossibleStartTsOrNull(event))
@@ -31,30 +32,33 @@ public class EntityConverter {
             .startHourTs(event.getTs().truncatedTo(ChronoUnit.HOURS))
             .endHourTs(event.getTs().truncatedTo(ChronoUnit.HOURS))
             .country(event.getCountry())
-            .build();
+            .build());
     }
 
-    public SessionCompleteByPlayer toSessionCompleteByPlayer(IngestEvent event) {
-
-        return SessionCompleteByPlayer.builder()
+    public Optional<SessionCompleteByPlayer> toSessionCompleteByPlayer(IngestEvent event) {
+        return Optional.of(SessionCompleteByPlayer.builder()
                 .playerId(event.getPlayerId())
                 .sessionId(event.getSessionId())
                 .country(event.getCountry())
                 .startTs(getPossibleStartTsOrNull(event))
                 .endTs(getPossibleEndTsOrDefault(event))
-                .build();
+                .build());
     }
 
-    public SessionStartedByCountry toSessionStartedByCountry(IngestEvent event) {
-        return SessionStartedByCountry.builder()
-                .country(event.getCountry())
-                .startHourTs(getPossibleStartHourTsOrNull(event))
-                .bucket(1)
-                .sessionId(event.getSessionId())
-                .playerId(event.getPlayerId())
-                .startTs(getPossibleStartTsOrNull(event))
-                .endTs(getPossibleEndTsOrNull(event))
-                .build();
+    public Optional<SessionStartedByCountry> toSessionStartedByCountry(IngestEvent event) {
+        if (event.getCountry() != null) {
+            return Optional.of(SessionStartedByCountry.builder()
+                    .country(event.getCountry())
+                    .startHourTs(getPossibleStartHourTsOrNull(event))
+                    .bucket(1)
+                    .sessionId(event.getSessionId())
+                    .playerId(event.getPlayerId())
+                    .startTs(getPossibleStartTsOrNull(event))
+                    .endTs(getPossibleEndTsOrNull(event))
+                    .build());
+        } else {
+            return Optional.empty();
+        }
     }
 
     private LocalDateTime getPossibleStartHourTsOrNull(@NotNull IngestEvent event) {

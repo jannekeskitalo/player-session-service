@@ -29,7 +29,7 @@ public class SessionStartedByCountry {
     private UUID sessionId;
 
     @Column("player_id")
-    private UUID playerId;
+    private String playerId;
 
     @Column("start_ts")
     private LocalDateTime startTs;

@@ -20,7 +20,7 @@ public class TestHelper {
             ingestEvents.add(IngestEvent.builder()
                     .country("FI")
                     .event("start")
-                    .playerId(UUID.randomUUID())
+                    .playerId(UUID.randomUUID().toString())
                     .sessionId(UUID.randomUUID())
                     .ts(LocalDateTime.now())
                     .build());

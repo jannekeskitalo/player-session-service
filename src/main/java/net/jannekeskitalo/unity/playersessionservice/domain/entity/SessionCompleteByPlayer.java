@@ -17,7 +17,7 @@ import java.util.UUID;
 public class SessionCompleteByPlayer {
 
     @PrimaryKeyColumn(name = "player_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
-    private UUID playerId;
+    private String playerId;
 
     @PrimaryKeyColumn(name = "session_id", ordinal = 2, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.ASCENDING)
     private UUID sessionId;

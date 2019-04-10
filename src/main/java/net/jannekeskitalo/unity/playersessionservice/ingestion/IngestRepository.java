@@ -7,9 +7,6 @@ import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionStarte
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.cassandra.core.AsyncCassandraTemplate;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
