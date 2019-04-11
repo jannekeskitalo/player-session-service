@@ -5,9 +5,7 @@ import net.jannekeskitalo.unity.playersessionservice.api.QueryItem;
 import net.jannekeskitalo.unity.playersessionservice.api.QueryResponse;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionByPlayerId;
 import org.springframework.stereotype.Service;
-
 import java.util.*;
-import java.util.stream.Stream;
 
 
 @Slf4j
@@ -15,11 +13,9 @@ import java.util.stream.Stream;
 public class QueryService {
 
     private final QueryRepository queryRepository;
-    private final QueryResponseConverter converter;
 
-    public QueryService(QueryRepository queryRepository, QueryResponseConverter converter) {
+    public QueryService(QueryRepository queryRepository) {
         this.queryRepository = queryRepository;
-        this.converter = converter;
     }
 
     public QueryResponse getSessionsByPlayer(String playerId) {
