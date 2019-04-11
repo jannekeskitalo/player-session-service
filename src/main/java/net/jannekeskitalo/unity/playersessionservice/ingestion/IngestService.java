@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEvent;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEventRequest;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionById;
-import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionCompleteByPlayer;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionByPlayerId;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionStartedByCountry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,11 +45,11 @@ public class IngestService {
         if (asyncEnabled) {
             handleSessionById(request.getEventBatch());
             handleSessionStartedByCountry(request.getEventBatch());
-            handleSessionCompleteByPlayer(request.getEventBatch());
+            handleSessionByPlayer(request.getEventBatch());
         } else {
             waitAllToComplete(handleSessionById(request.getEventBatch()));
             waitAllToComplete(handleSessionStartedByCountry(request.getEventBatch()));
-            waitAllToComplete(handleSessionCompleteByPlayer(request.getEventBatch()));
+            waitAllToComplete(handleSessionByPlayer(request.getEventBatch()));
         }
     }
 
@@ -69,10 +69,10 @@ public class IngestService {
         return futures;
     }
 
-    private List<CompletableFuture<SessionCompleteByPlayer>> handleSessionCompleteByPlayer(List<IngestEvent> ingestEventList) {
-        List<CompletableFuture<SessionCompleteByPlayer>> futures = new ArrayList<>();
+    private List<CompletableFuture<SessionByPlayerId>> handleSessionByPlayer(List<IngestEvent> ingestEventList) {
+        List<CompletableFuture<SessionByPlayerId>> futures = new ArrayList<>();
         for (IngestEvent event : ingestEventList) {
-            entityConverter.toSessionCompleteByPlayer(event).ifPresent(e -> futures.add(ingestRepository.insertSessionCompleteByPlayer(e)));
+            entityConverter.toSessionByPlayer(event).ifPresent(e -> futures.add(ingestRepository.insertSessionByPlayer(e)));
         }
         return futures;
     }

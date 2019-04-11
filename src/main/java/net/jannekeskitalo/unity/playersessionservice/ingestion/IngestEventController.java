@@ -24,7 +24,6 @@ public class IngestEventController implements IngestEventAPI {
 
     private final IngestService ingestService;
     private final IngestFileService ingestFileService;
-    private final TestHelper testHelper = new TestHelper();
 
     @Autowired
     public IngestEventController(IngestService ingestService, IngestFileService ingestFileService) {
@@ -35,33 +34,19 @@ public class IngestEventController implements IngestEventAPI {
     @RequestMapping(method = RequestMethod.POST, path = "")
     public ResponseEntity<IngestEventResponse> handleEventBatch(@Valid @RequestBody IngestEventRequest request) {
 
-        testHelper.startTimer();
-        ingestService.handleEventBatchAsync(request);
+        final TestHelper testHelper = TestHelper.startiming();
+        ingestService.handleEventBatchSync(request);
         long timeElapsed = testHelper.stopTimer();
         log.info("Elapsed micros: {}, micros per event: {}", timeElapsed / 1000, timeElapsed / request.getEventBatch().size() / 1000);
 
         return ResponseEntity.ok(IngestEventResponse.builder().ingestedEventCount(request.getEventBatch().size()).ts(LocalDateTime.now()).build());
     }
 
-    @RequestMapping(method = RequestMethod.GET, path = "/test")
-    public ResponseEntity test(@RequestParam(value = "requestBatchSize", defaultValue = "10") int requestBatchSize,
-                               @RequestParam(value = "asyncEnabled", defaultValue = "false") boolean asyncEnabled) {
+    @RequestMapping(method=RequestMethod.POST, path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> ingestFile(@RequestPart MultipartFile file, @RequestParam("count") int count) {
 
-        IngestEventRequest ingestEventRequest = TestHelper.createIngestEventRequestOfSize(requestBatchSize);
-        testHelper.startTimer();
-        if (asyncEnabled) {
-            ingestService.handleEventBatchAsync(ingestEventRequest);
-        } else {
-            ingestService.handleEventBatchSync(ingestEventRequest);
-        }
-        log.info("Elapsed per event: {}", testHelper.stopTimer() / ingestEventRequest.getEventBatch().size() / 1000000);
-        return ResponseEntity.accepted().build();
-    }
-
-    @RequestMapping(method=RequestMethod.POST, path = "/test/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> ingestFile(@RequestPart MultipartFile file) {
-        testHelper.startTimer();
-        ingestFileService.handleFile(file);
+        TestHelper testHelper = TestHelper.startiming();
+        ingestFileService.handleFile(file, count);
         log.info("Elapsed seconds: {}", testHelper.stopTimer() / 1000000000);
         return ResponseEntity.accepted().body("File ingested");
     }

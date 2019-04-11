@@ -1,6 +1,44 @@
 # Design document - player-session-service
 
-A service that stores events to Cassandra and allows querying them.
+A service that exposes a RESTful API to allow ingestion and querying of session events. Service uses Cassandra database.
+
+***
+
+## How to run
+
+Instructions how to run and test this service
+
+### Requirements
+
+* Docker installed and working
+
+### Startup
+
+```bash
+# From repo root -folder...
+docker network create --driver bridge test
+cd docker
+docker-compose build && docker-compose up
+```
+
+### Manual API testing
+
+* Open web browser and go to ```localhost:8080/swagger-ui.html```
+* Go to "Ingestion" and upload the test data file
+* Ingest event batches manually
+* Try the query API with some player_id
+
+### Running in IDE
+
+* A cassandra service needs to be available on localhost
+* If cassandra is remote, configure application.yml accordingly
+
+### Troubleshooting
+
+* Check docker networking is working. Stop VPN.
+* If Cassandra container is too slow to startup, increase sleep time in docker/Dockerfile & run compose build & up -again
+
+***
 
 ## Assignment
 
@@ -11,6 +49,8 @@ A service that stores events to Cassandra and allows querying them.
 * API for fetching last 20 complete sessions for a given player
 * Data older than 1 year should be discarded
 
+***
+
 ## API first -approach
 
 The design starts from the API requirements which are the following:
@@ -18,6 +58,8 @@ The design starts from the API requirements which are the following:
 1) Post event batches (1-10 events / batch)
 2) Get session starts for the last X (X is defined by the user) hours for each country
 3) Get last 20 complete sessions for a given player
+
+***
 
 ## Assumptions
 
@@ -28,7 +70,7 @@ As the assignment doesn't give details of the access load patterns, following is
 * Big reads of session starts are infrequent and batch oriented
 * Reads of last completed sessions per player are more frequent, but still significantly less than writes
 
-### Events
+### Example events
 
 ```
 {
@@ -38,9 +80,7 @@ As the assignment doesn't give details of the access load patterns, following is
 "session_id": "4a0c43c9-c43a-42ff-ba55-67563dfa35d4",
 "ts": "2016-12-02T12:48:05.520022"
 }
-```
-Example "end" -event
-```
+
 {
 "event": "end",
 "player_id": "0a2d12a1a7e145de8bae44c0c6e06629",
@@ -51,6 +91,8 @@ Example "end" -event
 
 Example data,
 https://cdn.unityads.unity3d.com/assignments/assignment_data.jsonl.bz2
+
+***
 
 ## Database model
 
@@ -64,7 +106,7 @@ To combine the events into one complete session, a lookup by session_id is neede
 
 ```sql
 // A session lookup table
-CREATE TABLE session_info (
+CREATE TABLE session_by_id (
   session_id UUID
 , player_id UUID
 , start_ts timestamp
@@ -141,16 +183,22 @@ Production deployment requires a load balancer in front of the service instances
 
 Deployment of the service and the underlying infrastructure should be automated and represented as code in a version control system. Good option for cloud deployments is Terraform that supports many different cloud vendors. It can be integrated with CICD -tool like Jenkins for further automation and ease of use.
 
+***
+
 ## Alternative architectures
 
 Alternative implementation of this service could be done using serverless functions and API gateway. Cassandra could be replaced with a managed db service that features similar scaling properties, most notably DynamoDB or Bigtable. One could also apply the CQRS pattern and put a performant message bus like Kafka behind the rest api and use Kafka Streams or Spark Streaming to build materialized views of the event data into multiple data stores that cater for different access patterns. Domain specific realtime dashboards would query data from Cassandra while more complex analytical use cases would be a better fit for Bigquery, Snowflake or similar distributed column stores.
 
+***
+
 ## Things to do
 
 * Exception handling and response codes
-* Performance testing with proper Cassandra cluster
 * Timestamp handling with full event precision
-* Timestamp timezone?
+* Data validation
+* Performance testing with proper Cassandra cluster
+
+***
 
 ## Appendix
 

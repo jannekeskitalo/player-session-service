@@ -1,20 +1,16 @@
 package net.jannekeskitalo.unity.playersessionservice.ingestion;
 
-import com.datastax.driver.core.Session;
 import lombok.extern.slf4j.Slf4j;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEvent;
-import net.jannekeskitalo.unity.playersessionservice.api.IngestEventRequest;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionById;
-import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionCompleteByPlayer;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionByPlayerId;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionStartedByCountry;
+import net.jannekeskitalo.unity.playersessionservice.exception.ConversionExceptionMissingKeyField;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -27,55 +23,64 @@ public class EntityConverter {
         return Optional.of(SessionById.builder()
             .sessionId(event.getSessionId())
             .playerId(event.getPlayerId())
-            .startTs(getPossibleStartTsOrNull(event))
-            .endTs(getPossibleEndTsOrNull(event))
+            .startTs(getPossibleStartTsOrNull(event).orElse(null))
+            .endTs(getPossibleEndTsOrNull(event).orElse(null))
             .startHourTs(event.getTs().truncatedTo(ChronoUnit.HOURS))
             .endHourTs(event.getTs().truncatedTo(ChronoUnit.HOURS))
             .country(event.getCountry())
             .build());
     }
 
-    public Optional<SessionCompleteByPlayer> toSessionCompleteByPlayer(IngestEvent event) {
-        return Optional.of(SessionCompleteByPlayer.builder()
+    public Optional<SessionByPlayerId> toSessionByPlayer(IngestEvent event) {
+        return Optional.of(SessionByPlayerId.builder()
                 .playerId(event.getPlayerId())
                 .sessionId(event.getSessionId())
+                .event(event.getEvent())
                 .country(event.getCountry())
-                .startTs(getPossibleStartTsOrNull(event))
-                .endTs(getPossibleEndTsOrDefault(event))
+                .ts(event.getTs())
                 .build());
     }
 
     public Optional<SessionStartedByCountry> toSessionStartedByCountry(IngestEvent event) {
-        if (event.getCountry() != null) {
+        if (event.getEvent().equals("start")) {
             return Optional.of(SessionStartedByCountry.builder()
                     .country(event.getCountry())
-                    .startHourTs(getPossibleStartHourTsOrNull(event))
+                    .startMinuteTs(getPossibleStartMinuteTsOrNull(event).orElseThrow(() -> new ConversionExceptionMissingKeyField("startHourTs")))
                     .bucket(1)
                     .sessionId(event.getSessionId())
                     .playerId(event.getPlayerId())
-                    .startTs(getPossibleStartTsOrNull(event))
-                    .endTs(getPossibleEndTsOrNull(event))
+                    .startTs(getPossibleStartTsOrNull(event).orElse(null))
+                    .endTs(getPossibleEndTsOrNull(event).orElse(null))
                     .build());
         } else {
             return Optional.empty();
         }
     }
 
-    private LocalDateTime getPossibleStartHourTsOrNull(@NotNull IngestEvent event) {
-        return getPossibleStartTsOrNull(event).truncatedTo(ChronoUnit.HOURS);
+    private Optional<LocalDateTime> getPossibleStartMinuteTsOrNull(@NotNull IngestEvent event) {
+        Optional<LocalDateTime> ts = getPossibleStartTsOrNull(event);
+        if (ts.isPresent()) {
+            return Optional.of(ts.get().truncatedTo(ChronoUnit.MINUTES));
+        } else {
+            return Optional.empty();
+        }
     }
 
-    private LocalDateTime getPossibleEndHourTsOrNull(@NotNull IngestEvent event) {
-        return getPossibleEndTsOrNull(event).truncatedTo(ChronoUnit.HOURS);
+    private Optional<LocalDateTime> getPossibleEndMinuteTsOrNull(@NotNull IngestEvent event) {
+        Optional<LocalDateTime> ts = getPossibleEndTsOrNull(event);
+        if (ts.isPresent()) {
+            return Optional.of(ts.get().truncatedTo(ChronoUnit.MINUTES));
+        } else {
+            return Optional.empty();
+        }
     }
 
-
-    private LocalDateTime getPossibleStartTsOrNull(@NotNull IngestEvent event) {
-        return event.getEvent().equals("start") ? event.getTs() : null;
+    private Optional<LocalDateTime> getPossibleStartTsOrNull(@NotNull IngestEvent event) {
+        return Optional.ofNullable(event.getEvent().equals("start") ? event.getTs() : null);
     }
 
-    private LocalDateTime getPossibleEndTsOrNull(@NotNull IngestEvent event) {
-        return event.getEvent().equals("end") ? event.getTs() : null;
+    private Optional<LocalDateTime> getPossibleEndTsOrNull(@NotNull IngestEvent event) {
+        return Optional.ofNullable(event.getEvent().equals("end") ? event.getTs() : null);
     }
 
     private LocalDateTime getPossibleEndTsOrDefault(@NotNull IngestEvent event) {

@@ -19,8 +19,8 @@ public class SessionStartedByCountry {
     @PrimaryKeyColumn(name = "country", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String country;
 
-    @PrimaryKeyColumn(name = "start_hour_ts", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
-    private LocalDateTime startHourTs;
+    @PrimaryKeyColumn(name = "start_minute_ts", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
+    private LocalDateTime startMinuteTs;
 
     @PrimaryKeyColumn(name = "bucket", ordinal = 2, type = PrimaryKeyType.PARTITIONED)
     private int bucket;

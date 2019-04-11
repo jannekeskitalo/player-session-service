@@ -29,40 +29,41 @@ public class IngestFileService {
         this.ingestService = ingestService;
     }
 
-    public void handleFile(MultipartFile file) {
+    public void handleFile(MultipartFile file, int count) {
 
         ObjectMapper mapper = new ObjectMapper();
 
         int batchCount = 0;
         int eventCount = 0;
-        int count = 1;
+        int eventsInBatchCount = 1;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
             IngestEvent ingestEvent;
-            List<IngestEvent> ingestEventList = new ArrayList<>();
+            List<IngestEvent> batch = new ArrayList<>();
             while (reader.ready()) {
+                if (eventCount == count) { break; }
                 String line = reader.readLine();
                 ingestEvent = mapper.readValue(line, IngestEvent.class);
                 eventCount++;
-                if (count == 1) {
-                    ingestEventList = new ArrayList<>();
-                    ingestEventList.add(ingestEvent);
-                    count++;
-                } else if (count < 10) {
-                    ingestEventList.add(ingestEvent);
-                    count++;
+                if (eventsInBatchCount == 1) {
+                    batch = new ArrayList<>();
+                    batch.add(ingestEvent);
+                    eventsInBatchCount++;
+                } else if (eventsInBatchCount < 10) {
+                    batch.add(ingestEvent);
+                    eventsInBatchCount++;
                 } else {
-                    ingestEventList.add(ingestEvent);
-                    ingestService.handleEventBatchAsync(IngestEventRequest.builder().eventBatch(ingestEventList).build());
-                    ingestEventList = null;
-                    count = 1;
+                    batch.add(ingestEvent);
+                    ingestService.handleEventBatchAsync(IngestEventRequest.builder().eventBatch(batch).build());
+                    batch = null;
+                    eventsInBatchCount = 1;
                     batchCount++;
                     if (batchCount % 1000 == 0) {
                         log.info("Batches: {}, events: {}", batchCount, eventCount);
                     }
                 }
             }
-            if (ingestEventList != null) {
-                ingestService.handleEventBatchAsync(IngestEventRequest.builder().eventBatch(ingestEventList).build());
+            if (batch != null) {
+                ingestService.handleEventBatchAsync(IngestEventRequest.builder().eventBatch(batch).build());
             };
 
         } catch (FileNotFoundException e) {

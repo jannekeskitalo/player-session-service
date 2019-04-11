@@ -12,7 +12,7 @@ spring:
   data:
     cassandra:
       keyspace-name: test
-      schema-action: recreate
+      schema-action: create_if_not_exists
       contact-points: localhost
 
 ---
@@ -25,5 +25,5 @@ spring:
       contact-points: cassandra
 logging:
   level:
-    com.datastax.driver: DEBUG
+    com.datastax.driver: ERROR
 
