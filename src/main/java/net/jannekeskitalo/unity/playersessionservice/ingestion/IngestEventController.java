@@ -46,7 +46,7 @@ public class IngestEventController implements IngestEventAPI {
     }
 
     @RequestMapping(method=RequestMethod.POST, path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> ingestFile(@RequestPart MultipartFile file, @RequestParam("count") int count) {
+    public ResponseEntity<String> ingestFile(@RequestPart MultipartFile file, @RequestParam(name = "count") int count) {
 
         TestHelper testHelper = TestHelper.startiming();
         ingestFileService.handleFile(file, count);
@@ -54,13 +54,13 @@ public class IngestEventController implements IngestEventAPI {
         return ResponseEntity.accepted().body("File ingested");
     }
 
-    @RequestMapping(method=RequestMethod.GET, path = "/generate")
-    public ResponseEntity<String> generate(@RequestParam("count") int count) {
+    @RequestMapping(method=RequestMethod.POST, path = "/generate")
+    public ResponseEntity<String> generate(@RequestParam(name = "count") int count) {
 
         TestHelper testHelper = TestHelper.startiming();
         testDataHelper.generateTestData(count);
         log.info("Elapsed seconds: {}", testHelper.stopTimer() / 1000000000);
-        return ResponseEntity.accepted().body("File ingested");
+        return ResponseEntity.accepted().contentType(MediaType.TEXT_PLAIN).body("Generated " + count + " records");
     }
 
 }

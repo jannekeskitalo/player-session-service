@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -34,12 +35,7 @@ public class TestDataHelper {
                     .country("FI")
                     .build();
             //log.info("Test item: {}", s);
-            CompletableFuture f = ingestRepository.insertSessionStartedByCountry(s);
-            try {
-                f.get();
-            } catch (Exception e) {
-                log.error("Failed to insert item: {}", s);
-            }
+            ingestRepository.insertSessionStartedByCountry(s);
         }
     }
 

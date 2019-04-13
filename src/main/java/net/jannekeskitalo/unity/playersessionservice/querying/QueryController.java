@@ -59,16 +59,4 @@ public class QueryController implements QueryAPI {
         emitter.complete();
         return ResponseEntity.ok(emitter);
     }
-
-    @RequestMapping(method = RequestMethod.GET, path = "streaming/by-country/{country}/{hour}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<StreamingResponseBody> getSessionsByCountryStream(
-            @PathVariable(name = "country") String country,
-            @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
-            @PathVariable(name = "hour") LocalDateTime hour) throws IOException {
-
-        StreamingResponseBody stream = out -> {
-            queryService.getSessionsByCountry(country, hour, out);
-        };
-        return ResponseEntity.ok(stream);
-    }
 }

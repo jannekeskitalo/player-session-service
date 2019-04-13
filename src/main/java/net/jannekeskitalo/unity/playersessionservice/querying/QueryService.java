@@ -69,25 +69,10 @@ public class QueryService {
 
     public void getSessionsByCountry(String country, LocalDateTime hour, ResponseBodyEmitter emitter) {
 
-        //ResultConsumer resultConsumer = new ResultConsumer(emitter);
-
         ListenableFuture f;
         for (int bucket = 1; bucket <=  BUCKET_COUNT; bucket++) {
             f = queryRepository.getLastStartedSessionsByCountryForBucket(country, hour, bucket, new ResultConsumer(emitter));
-            try { f.get(); } catch (Exception e) { log.error("Error reported feching bucket {}. Error: {}", bucket, e); }
+            try { f.get(); } catch (Exception e) { log.error("Error reported fetching bucket: {}", e); }
         }
     }
-
-    public void getSessionsByCountry(String country, LocalDateTime hour, OutputStream out) {
-
-        //ResultConsumerStreamer resultConsumer = new ResultConsumerStreamer(out);
-
-        ListenableFuture f;
-        for (int bucket = 1; bucket <=  BUCKET_COUNT; bucket++) {
-            f = queryRepository.getLastStartedSessionsByCountryForBucket(country, hour, bucket, new ResultConsumerStreamer(out));
-            try { f.get(); } catch (Exception e) { log.error("Error reported feching bucket {}. Error: {}", bucket, e); }
-        }
-    }
-
-
 }

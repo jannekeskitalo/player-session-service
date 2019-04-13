@@ -20,9 +20,9 @@ public interface QueryAPI {
 
     @RequestMapping(method = RequestMethod.GET, path = "/by-country/{country}/{hour}")
     public ResponseEntity<ResponseBodyEmitter> sessionsByCountry(
-            @ApiParam(required = true, name = "country", value = "Country as US/FI/SE")
+            @ApiParam(required = true, name = "country", value = "Country as US/FI/SE", defaultValue = "FI")
             @PathVariable(name = "country") String country,
-            @ApiParam(required = true, name = "hour", value = "Timestamp truncated to specific hour")
+            @ApiParam(required = true, name = "hour", value = "Timestamp truncated to specific hour", defaultValue = "2019-04-13T17:00:00")
             @DateTimeFormat(pattern="yyyy-MM-dd'T'HH:mm:ss")
             @PathVariable(name = "hour") LocalDateTime hour) throws IOException;
 }

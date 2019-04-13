@@ -4,9 +4,6 @@ import net.jannekeskitalo.unity.playersessionservice.ingestion.Bucketizer;
 import org.junit.Before;
 import org.junit.Test;
 import static net.jannekeskitalo.unity.playersessionservice.ingestion.Bucketizer.BUCKET_COUNT;
-import java.util.UUID;
-import java.util.stream.IntStream;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -20,7 +17,7 @@ public class BucketizerTest {
     }
 
     @Test
-    public void test_bucket_id_in_requested_range() {
+    public void test_bucket_id_in_configured_range() {
         int bucketCount = BUCKET_COUNT;
 
         int bucketIdMin = 1;
@@ -36,5 +33,4 @@ public class BucketizerTest {
         assertThat(bucketIdMax, lessThanOrEqualTo(bucketCount));
         assertThat(bucketIdMin, greaterThanOrEqualTo(1));
     }
-
 }

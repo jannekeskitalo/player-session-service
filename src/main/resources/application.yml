@@ -3,6 +3,7 @@ spring:
     active: local
   servlet:
     multipart:
+      # This is to allow upload of the test data
       max-file-size: 200000000
       max-request-size: 200000000
 
@@ -14,6 +15,11 @@ spring:
       keyspace-name: test
       schema-action: recreate
       contact-points: localhost
+      # Fetch size needs to be set as high as the maximum partition record count.
+      # Otherwise cassandra driver will throw an error when doing async resultset iteration
+      # without splitting the fetches exactly to page size chunks. This is very inconvenient
+      # and seemingly impossible to do with Spring asynCassandraTemplate.
+      fetch-size: 100000
 
 ---
 spring:
@@ -23,6 +29,7 @@ spring:
       keyspace-name: test
       schema-action: recreate
       contact-points: cassandra
+      fetch-size: 100000
 logging:
   level:
     com.datastax.driver: ERROR

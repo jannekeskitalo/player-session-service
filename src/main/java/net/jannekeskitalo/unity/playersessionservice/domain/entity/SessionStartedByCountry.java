@@ -31,7 +31,7 @@ public class SessionStartedByCountry {
     @PrimaryKeyColumn(name = "start_ts", ordinal = 3, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
     private LocalDateTime startTs;
 
-    @Column("session_id")
+    @PrimaryKeyColumn(name = "session_id", ordinal = 4, type = PrimaryKeyType.CLUSTERED)
     private UUID sessionId;
 
     @Column("player_id")

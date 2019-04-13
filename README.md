@@ -105,57 +105,39 @@ The API requires two separate tables to effectively query the data. However, the
 To combine the events into one complete session, a lookup by session_id is needed. For this we need an auxiliary table that serves no purpose for the API, but allows the building of a materialized view for completed sessions.  
 
 ```sql
-// A session lookup table
-CREATE TABLE session_by_id (
-  session_id UUID
-, player_id UUID
-, start_ts timestamp
-, end_ts timestamp
-, start_hour timestamp
-, end_hour timestamp
-, country text
-, PRIMARY KEY (session_id, start_hour)
-);
-
-// Last started sessions by country
+// Last sessions started by country
 CREATE TABLE session_started_by_country (
-  country text
-, hour timestamp
-, bucket int
-, start_ts timestamp
-, session_id UUID
-, player_id UUID
-  PRIMARY KEY ((country, hour, bucket), start_ts)
-) WITH CLUSTERING ORDER BY (start_ts DESC)
-  AND COMPACTION = {'class': 'TimeWindowCompactionStrategy', 
-                       'compaction_window_unit': 'HOURS', 
-                       'compaction_window_size': 1};
+    country text,
+    start_hour_ts timestamp,
+    bucket int,
+    start_ts timestamp,
+    session_id uuid,
+    player_id text,
+    PRIMARY KEY ((country, start_hour_ts, bucket), start_ts, session_id)
+) WITH CLUSTERING ORDER BY (start_ts DESC, session_id ASC);
                        
-// Last started sessions by country as MV
-CREATE MATERIALIZED VIEW player_session as
-  SELECT
-    country
-  , start_hour
-  , start_ts
-  , player_id
-  , session_id
-  FROM session_info
-  WHERE country is not null and start_hour is not null and start_ts is not null and session_id is not null
-  PRIMARY KEY ((country, start_hour), start_ts)
-  WITH CLUSTERING ORDER BY (start_ts DESC);
 
-// Last complete sessions by player
-CREATE MATERIALIZED VIEW session_by_player as
-  SELECT
-    player_id
-  , session_id
-  , start_ts
-  , end_ts
-  , country
-  FROM session_info
-  WHERE end_ts is not null
-  PRIMARY KEY ((player_id), completed_ts, session_id)
-  WITH CLUSTERING ORDER BY (completed_ts DESC);
+// Session events by player. Used to search for complete player sessions.
+CREATE TABLE session_by_player_id (
+    player_id text,
+    ts timestamp,
+    country text,
+    event text,
+    session_id uuid,
+    PRIMARY KEY (player_id, ts)
+) WITH CLUSTERING ORDER BY (ts DESC);
+
+// Table used during development to get insight on session events.
+CREATE TABLE test.session_by_id (
+      session_id uuid,
+      start_hour timestamp,
+      country text,
+      end_hour timestamp,
+      end_ts timestamp,
+      player_id text,
+      start_ts timestamp,
+      PRIMARY KEY (session_id, start_hour)
+  ) WITH CLUSTERING ORDER BY (start_hour DESC);
 
 ```
 

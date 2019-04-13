@@ -10,14 +10,11 @@ import org.springframework.data.cassandra.core.query.Query;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.concurrent.ListenableFuture;
-
 import static org.springframework.data.cassandra.core.query.Criteria.where;
 import static org.springframework.data.cassandra.core.query.Query.query;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 @Slf4j
 @Repository
@@ -44,7 +41,6 @@ public class QueryRepository {
                 .and(where("bucket").is(bucket))
                 .and(where("start_hour_ts").is(hour))
                 .sort(Sort.by("start_ts").descending());
-        String cql2 = "select * from session_started_by_country where country = '" + country + "' AND bucket = " + bucket + " AND start_hour_ts = '" + hour + "' order by start_ts desc";
-        return asyncCassandraTemplate.select(cql2, consumer, SessionStartedByCountry.class);
+        return asyncCassandraTemplate.select(q, consumer, SessionStartedByCountry.class);
     }
 }
