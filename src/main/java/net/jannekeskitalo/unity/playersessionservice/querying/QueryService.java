@@ -7,12 +7,14 @@ import net.jannekeskitalo.unity.playersessionservice.api.QueryItem;
 import net.jannekeskitalo.unity.playersessionservice.api.QueryResponse;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionByPlayerId;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionStartedByCountry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.*;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Consumer;
@@ -67,12 +69,21 @@ public class QueryService {
         return queryResponse;
     }
 
-    public void getSessionsByCountry(String country, LocalDateTime hour, ResponseBodyEmitter emitter) {
+    public void getSessionsByCountry(String country, int hours, ResponseBodyEmitter emitter) {
 
-        ListenableFuture f;
-        for (int bucket = 1; bucket <=  BUCKET_COUNT; bucket++) {
-            f = queryRepository.getLastStartedSessionsByCountryForBucket(country, hour, bucket, new ResultConsumer(emitter));
-            try { f.get(); } catch (Exception e) { log.error("Error reported fetching bucket: {}", e); }
+        List<LocalDateTime> timestampsForLastHours = TimeLogic.timestampsForLastHours(hours, Clock.systemDefaultZone());
+
+        for (LocalDateTime hour : timestampsForLastHours) {
+            log.info("Querying for ts: {}", hour);
+            ListenableFuture f;
+            for (int bucket = 1; bucket <= BUCKET_COUNT; bucket++) {
+                f = queryRepository.getLastStartedSessionsByCountryForBucket(country, hour, bucket, new ResultConsumer(emitter));
+                try {
+                    f.get();
+                } catch (Exception e) {
+                    log.error("Error reported fetching bucket: {}", e);
+                }
+            }
         }
     }
 }

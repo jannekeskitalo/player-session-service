@@ -45,7 +45,7 @@ public class QueryApiTest {
         given().
                 header("Accept","application/json").
                 when().
-                get("/sessions/by-country/FI/2016-11-25T20:00:00").
+                get("/sessions/by-country/FI/1").
                 then().
                 statusCode(200);
 

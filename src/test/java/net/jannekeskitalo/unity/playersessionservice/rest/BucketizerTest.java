@@ -9,13 +9,6 @@ import static org.hamcrest.Matchers.*;
 
 public class BucketizerTest {
 
-    Bucketizer bucketizer;
-
-    @Before
-    public void setup() {
-        bucketizer = new Bucketizer();
-    }
-
     @Test
     public void test_bucket_id_in_configured_range() {
         int bucketCount = BUCKET_COUNT;
@@ -25,7 +18,7 @@ public class BucketizerTest {
         int newBucketId;
         int count = 0;
         while(count <= 1000) {
-            newBucketId = bucketizer.bucketId();
+            newBucketId = Bucketizer.bucketId();
             bucketIdMin = newBucketId < bucketIdMin ? newBucketId : bucketIdMin;
             bucketIdMax = newBucketId > bucketIdMax ? newBucketId : bucketIdMax;
             count++;

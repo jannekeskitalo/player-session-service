@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static net.jannekeskitalo.unity.playersessionservice.ingestion.Bucketizer.bucketId;
 
@@ -25,10 +26,14 @@ public class TestDataHelper {
 
     public void generateTestData(int count) {
 
+        LocalDateTime ts;
         for (int i = 0; i < count; i++) {
+
+            ts = LocalDateTime.now().minusHours(ThreadLocalRandom.current().nextInt(0, 12));
+
             SessionStartedByCountry s = SessionStartedByCountry.builder()
-                    .startTs(LocalDateTime.now())
-                    .startHourTs(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS))
+                    .startTs(ts)
+                    .startHourTs(ts.truncatedTo(ChronoUnit.HOURS))
                     .sessionId(UUID.randomUUID())
                     .bucket(bucketId())
                     .playerId("c201d8166ae24796bf1c3ffdabdd8ec8")

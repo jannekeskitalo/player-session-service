@@ -1,8 +1,6 @@
 package net.jannekeskitalo.unity.playersessionservice.ingestion;
 
-import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.asm.Advice;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEventRequest;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEventAPI;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEventResponse;
@@ -13,13 +11,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 
 @Slf4j
 @RestController
-@Api(tags = "Ingestion", description = "Ingests session event batches. Max batch size is 10.")
 @RequestMapping(path = "/ingest", produces = MediaType.APPLICATION_JSON_VALUE)
 public class IngestEventController implements IngestEventAPI {
 

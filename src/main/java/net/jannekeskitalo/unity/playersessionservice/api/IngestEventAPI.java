@@ -1,15 +1,16 @@
 package net.jannekeskitalo.unity.playersessionservice.api;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.Valid;
 
 @RequestMapping(path = "/ingest", produces = MediaType.APPLICATION_JSON_VALUE)
+@Api(tags = "Ingestion", description = "Ingests session event batches. Max batch size is 10.")
 public interface IngestEventAPI {
 
     @RequestMapping(method = RequestMethod.POST, path = "")

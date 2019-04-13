@@ -15,6 +15,9 @@ public class Bucketizer {
 
     public static int BUCKET_COUNT = 100;
 
+    private Bucketizer() {
+    }
+
     // This should be changed to deterministic value, for example derive it from the player_id
     public static int bucketId() {
         return ThreadLocalRandom.current().nextInt(1, BUCKET_COUNT + 1);

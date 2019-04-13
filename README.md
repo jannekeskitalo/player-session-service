@@ -6,7 +6,7 @@ A service that exposes a RESTful API to allow ingestion and querying of session 
 
 ## How to run
 
-Instructions how to run and test this service
+Instructions how to run and test this service.
 
 ### Requirements
 
@@ -28,12 +28,13 @@ docker-compose build && docker-compose up
 * Ingest event batches manually
 * Try the query API with some player_id
 
-### Running in IDE
+### Running in IDE without docker
 
 * A cassandra service needs to be available on localhost
-* If cassandra is remote, configure application.yml accordingly
+* TEST -keyspace needs to exist in cassandra
+* If cassandra is remote, configure connection properties in application.yml accordingly
 
-### Troubleshooting
+### Troubleshooting docker-compose setup
 
 * Check docker networking is working. Stop VPN.
 * If Cassandra container is too slow to startup, increase sleep time in docker/Dockerfile & run compose build & up -again
@@ -54,10 +55,13 @@ docker-compose build && docker-compose up
 ## API first -approach
 
 The design starts from the API requirements which are the following:
-
+```
 1) Post event batches (1-10 events / batch)
 2) Get session starts for the last X (X is defined by the user) hours for each country
 3) Get last 20 complete sessions for a given player
+```
+
+Implementation was done following the requirements faithfully. For requirement #2, getting session starts for a country, I would implement another API that allows fetching the data in one minute slices. Clients of this particular endpoint are most likely batch processing systems and they could easily initiate parallel queries to fetch the data for a full hour. Splitting the data to smaller chunks would make loading faster and more resilient. In case of failures, the client needs to reload less amount of data due to the smaller chunk size.
 
 ***
 
