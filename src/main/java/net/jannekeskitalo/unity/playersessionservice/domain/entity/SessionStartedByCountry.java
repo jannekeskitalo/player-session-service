@@ -1,5 +1,7 @@
 package net.jannekeskitalo.unity.playersessionservice.domain.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.cassandra.core.cql.Ordering;
@@ -14,28 +16,27 @@ import java.util.UUID;
 @Builder
 @Data
 @Table("session_started_by_country")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SessionStartedByCountry {
 
     @PrimaryKeyColumn(name = "country", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
     private String country;
 
-    @PrimaryKeyColumn(name = "start_minute_ts", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
-    private LocalDateTime startMinuteTs;
+    @PrimaryKeyColumn(name = "start_hour_ts", ordinal = 1, type = PrimaryKeyType.PARTITIONED)
+    private LocalDateTime startHourTs;
 
     @PrimaryKeyColumn(name = "bucket", ordinal = 2, type = PrimaryKeyType.PARTITIONED)
     private int bucket;
 
-    @PrimaryKeyColumn(name = "session_id", ordinal = 3, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    @PrimaryKeyColumn(name = "start_ts", ordinal = 3, type = PrimaryKeyType.CLUSTERED, ordering = Ordering.DESCENDING)
+    private LocalDateTime startTs;
+
+    @Column("session_id")
     private UUID sessionId;
 
     @Column("player_id")
     private String playerId;
 
-    @Column("start_ts")
-    private LocalDateTime startTs;
-
-    @Column("end_ts")
-    private LocalDateTime endTs;
 
 }
 

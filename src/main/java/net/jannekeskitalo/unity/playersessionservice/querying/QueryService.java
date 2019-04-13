@@ -1,11 +1,24 @@
 package net.jannekeskitalo.unity.playersessionservice.querying;
 
+import jnr.ffi.Struct;
+import jnr.ffi.annotations.Out;
 import lombok.extern.slf4j.Slf4j;
 import net.jannekeskitalo.unity.playersessionservice.api.QueryItem;
 import net.jannekeskitalo.unity.playersessionservice.api.QueryResponse;
 import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionByPlayerId;
+import net.jannekeskitalo.unity.playersessionservice.domain.entity.SessionStartedByCountry;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyEmitter;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
+
+import java.io.*;
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+import static net.jannekeskitalo.unity.playersessionservice.ingestion.Bucketizer.BUCKET_COUNT;
 
 
 @Slf4j
@@ -53,4 +66,28 @@ public class QueryService {
         }
         return queryResponse;
     }
+
+    public void getSessionsByCountry(String country, LocalDateTime hour, ResponseBodyEmitter emitter) {
+
+        //ResultConsumer resultConsumer = new ResultConsumer(emitter);
+
+        ListenableFuture f;
+        for (int bucket = 1; bucket <=  BUCKET_COUNT; bucket++) {
+            f = queryRepository.getLastStartedSessionsByCountryForBucket(country, hour, bucket, new ResultConsumer(emitter));
+            try { f.get(); } catch (Exception e) { log.error("Error reported feching bucket {}. Error: {}", bucket, e); }
+        }
+    }
+
+    public void getSessionsByCountry(String country, LocalDateTime hour, OutputStream out) {
+
+        //ResultConsumerStreamer resultConsumer = new ResultConsumerStreamer(out);
+
+        ListenableFuture f;
+        for (int bucket = 1; bucket <=  BUCKET_COUNT; bucket++) {
+            f = queryRepository.getLastStartedSessionsByCountryForBucket(country, hour, bucket, new ResultConsumerStreamer(out));
+            try { f.get(); } catch (Exception e) { log.error("Error reported feching bucket {}. Error: {}", bucket, e); }
+        }
+    }
+
+
 }

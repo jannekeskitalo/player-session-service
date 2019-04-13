@@ -6,6 +6,7 @@ import net.bytebuddy.asm.Advice;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEventRequest;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEventAPI;
 import net.jannekeskitalo.unity.playersessionservice.api.IngestEventResponse;
+import net.jannekeskitalo.unity.playersessionservice.util.TestDataHelper;
 import net.jannekeskitalo.unity.playersessionservice.util.TestHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -24,11 +25,13 @@ public class IngestEventController implements IngestEventAPI {
 
     private final IngestService ingestService;
     private final IngestFileService ingestFileService;
+    TestDataHelper testDataHelper;
 
     @Autowired
-    public IngestEventController(IngestService ingestService, IngestFileService ingestFileService) {
+    public IngestEventController(IngestService ingestService, IngestFileService ingestFileService, TestDataHelper testDataHelper) {
         this.ingestService = ingestService;
         this.ingestFileService = ingestFileService;
+        this.testDataHelper = testDataHelper;
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "")
@@ -47,6 +50,15 @@ public class IngestEventController implements IngestEventAPI {
 
         TestHelper testHelper = TestHelper.startiming();
         ingestFileService.handleFile(file, count);
+        log.info("Elapsed seconds: {}", testHelper.stopTimer() / 1000000000);
+        return ResponseEntity.accepted().body("File ingested");
+    }
+
+    @RequestMapping(method=RequestMethod.GET, path = "/generate")
+    public ResponseEntity<String> generate(@RequestParam("count") int count) {
+
+        TestHelper testHelper = TestHelper.startiming();
+        testDataHelper.generateTestData(count);
         log.info("Elapsed seconds: {}", testHelper.stopTimer() / 1000000000);
         return ResponseEntity.accepted().body("File ingested");
     }

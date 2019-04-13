@@ -1,6 +1,7 @@
 package net.jannekeskitalo.unity.playersessionservice.util;
 
 import lombok.Builder;
+import net.jannekeskitalo.unity.playersessionservice.ingestion.IngestRepository;
 
 public class TestHelper {
 
@@ -13,6 +14,7 @@ public class TestHelper {
     public static TestHelper startiming() {
         return new TestHelper();
     }
+
     public void startTimer() {
         timerStartNanos = System.nanoTime();
     }

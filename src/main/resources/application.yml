@@ -12,7 +12,7 @@ spring:
   data:
     cassandra:
       keyspace-name: test
-      schema-action: create_if_not_exists
+      schema-action: recreate
       contact-points: localhost
 
 ---

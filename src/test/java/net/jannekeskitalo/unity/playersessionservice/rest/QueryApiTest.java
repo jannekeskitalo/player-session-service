@@ -1,5 +1,6 @@
 package net.jannekeskitalo.unity.playersessionservice.rest;
 
+import lombok.extern.slf4j.Slf4j;
 import net.jannekeskitalo.unity.playersessionservice.PlayerSessionServiceApplication;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,12 +16,19 @@ import io.restassured.http.Header;
 import io.restassured.http.Headers;
 import io.restassured.response.Response;
 
+import javax.validation.constraints.Size;
+
+import static io.restassured.RestAssured.*;
+import static io.restassured.matcher.RestAssuredMatchers.*;
+import static org.hamcrest.Matchers.*;
+
 import static org.junit.Assert.assertEquals;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = PlayerSessionServiceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DirtiesContext(classMode=DirtiesContext.ClassMode.AFTER_CLASS)
-public class IngestionApiTest {
+public class QueryApiTest {
 
     @LocalServerPort
     private int port;
@@ -30,7 +38,13 @@ public class IngestionApiTest {
         RestAssured.port = port;
     }
     @Test
-    public void testPass() {
-        assertEquals("Pass this", 1, 1);
+    public void searchResponseStatus200() {
+        given().
+            header("Accept","application/json").
+        when().
+            get("/sessions/by-player/2d4073e4-6ceb-4d0a-9d40-be301b9437ef").
+        then().
+            statusCode(200);
+
     }
 }

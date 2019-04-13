@@ -43,11 +43,11 @@ public class IngestService {
     public void handleEventBatch(IngestEventRequest request, boolean asyncEnabled) {
 
         if (asyncEnabled) {
-            handleSessionById(request.getEventBatch());
+            //handleSessionById(request.getEventBatch());
             handleSessionStartedByCountry(request.getEventBatch());
             handleSessionByPlayer(request.getEventBatch());
         } else {
-            waitAllToComplete(handleSessionById(request.getEventBatch()));
+            //waitAllToComplete(handleSessionById(request.getEventBatch()));
             waitAllToComplete(handleSessionStartedByCountry(request.getEventBatch()));
             waitAllToComplete(handleSessionByPlayer(request.getEventBatch()));
         }

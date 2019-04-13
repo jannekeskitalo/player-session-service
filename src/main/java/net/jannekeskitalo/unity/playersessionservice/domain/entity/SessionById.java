@@ -1,5 +1,7 @@
 package net.jannekeskitalo.unity.playersessionservice.domain.entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.cassandra.core.cql.Ordering;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Builder
 @Data
 @Table("session_by_id")
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SessionById {
 
     @PrimaryKeyColumn(name = "session_id", ordinal = 0, type = PrimaryKeyType.PARTITIONED)
